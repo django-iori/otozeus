@@ -10,3 +10,7 @@ class DemoView(APIView):
         demo.save()
         print(request.data['stream'])
         return Response({ 'success': 'file accepted' })
+
+#動作確認用
+def index_template(request):
+    return render(request, 'index.html')
