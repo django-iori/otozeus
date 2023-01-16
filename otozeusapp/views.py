@@ -24,8 +24,8 @@ def MovToMp4(path,root):
     date = datetime.datetime.now()
     date = str(date.year) + "-" + str(date.month) + "-" + str(date.day) + "_" + str(date.hour) + "-" + str(date.minute) + "-" + str(date.second) + "-" + str(date.microsecond) + ".mp4"
     mp4 = os.path.join(root, date)
-    print("ffmpeg.exe -i \""+path+"\" \""+mp4+"\"")
-    subprocess.run("ffmpeg.exe -i \""+path+"\" \""+mp4+"\"", shell=True)
+    print("ffmpeg -i \""+path+"\" \""+mp4+"\"")
+    subprocess.run("ffmpeg -i \""+path+"\" \""+mp4+"\"", shell=True)
 
 class DemoView(APIView):
     def post(self, request, format=None):
