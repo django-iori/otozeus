@@ -12,20 +12,19 @@ import datetime
 
 #.mov -> .mp4
 def MovToMp4(path,root):
-    """ print("ffmpeg.exe -i \""+path+"\"")
-    result = subprocess.run("ffmpeg.exe -i \""+path+"\"", shell=True, stderr=subprocess.PIPE, universal_newlines=True)
-    m = re.search("(?<=com.apple.quicktime.creationdate: )(.*)" , result.stderr)
-    date = m.group(0)
-    date = date[:-5]
-    date = date.replace('T', ' ')
-    date = date.replace(':', '.')
-    date = date + ".mp4"
-    mp4 = os.path.join(root,date) """
     date = datetime.datetime.now()
     date = str(date.year) + "-" + str(date.month) + "-" + str(date.day) + "_" + str(date.hour) + "-" + str(date.minute) + "-" + str(date.second) + "-" + str(date.microsecond) + ".mp4"
     mp4 = os.path.join(root, date)
     print("ffmpeg -i \""+path+"\" \""+mp4+"\"")
     subprocess.run("ffmpeg -i \""+path+"\" \""+mp4+"\"", shell=True)
+
+# -> .mp3
+def M4aToMp3(path,root):
+    date = datetime.datetime.now()
+    date = str(date.year) + "-" + str(date.month) + "-" + str(date.day) + "_" + str(date.hour) + "-" + str(date.minute) + "-" + str(date.second) + "-" + str(date.microsecond) + ".mp3"
+    mp3 = os.path.join(root, date)
+    print("ffmpeg -i \""+path+"\" \""+mp3+"\"")
+    subprocess.run("ffmpeg -i \""+path+"\" \""+mp3+"\"", shell=True)
 
 class DemoView(APIView):
     def post(self, request, format=None):
@@ -37,7 +36,8 @@ class DemoView(APIView):
         filepath = os.path.join(Path(__file__).resolve().parent.parent, 'media', 'uploads', filename)
         rootpath = os.path.join(Path(__file__).resolve().parent.parent, 'media')
         print(filepath)
-        MovToMp4(filepath, rootpath)
+        """ MovToMp4(filepath, rootpath) """
+        M4aToMp3(filepath, rootpath)
         return Response({ 'success': 'file accepted' })
 
 #動作確認用
