@@ -46,6 +46,14 @@ class DemoView(APIView):
         audio = open(audio_path, "rb")
         return FileResponse(audio, filename=file_name)
 
+class DeleteView(APIView):
+    def post(self, request, format=None):
+        filename = str(request.data['filename'])
+        extension = ".mp3"
+        filepath = os.path.join(Path(__file__).resolve().parent.parent, 'media', filename + extension)
+        os.remove(filepath)
+        return Response("delete completed!")
+
 #動作確認用
 def index_template(request):
     return render(request, 'index.html')
