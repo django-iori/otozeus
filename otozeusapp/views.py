@@ -45,7 +45,7 @@ class DemoView(APIView):
         audio_path, file_name = M4aToMp3(filepath, rootpath)
         audio = open(audio_path)
         deliverable = FileResponse(audio, filename=file_name)
-        return 
+        return deliverable
 
 #動作確認用
 def index_template(request):
