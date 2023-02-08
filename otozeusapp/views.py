@@ -43,7 +43,7 @@ class DemoView(APIView):
         print(filepath)
         """ MovToMp4(filepath, rootpath) """
         audio_path, file_name = M4aToMp3(filepath, rootpath)
-        audio = open(audio_path)
+        audio = open(audio_path, "rb")
         return FileResponse(audio, filename=file_name)
 
 #動作確認用
