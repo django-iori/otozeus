@@ -141,7 +141,7 @@ CORS_ORIGIN_WHITELIST  = [
     'http://localhost:3000'
 ]
 
-LOGGING = {
+""" LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
@@ -158,4 +158,4 @@ LOGGING = {
             'propagate': True,
         },
     },
-}
+} """

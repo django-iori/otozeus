@@ -24,11 +24,12 @@ def MovToMp4(path,root):
 # -> .mp3
 def M4aToMp3(path,root):
     date = datetime.datetime.now()
-    date = str(date.year) + "-" + str(date.month) + "-" + str(date.day) + "_" + str(date.hour) + "-" + str(date.minute) + "-" + str(date.second) + "-" + str(date.microsecond) + ".mp3"
-    mp3 = os.path.join(root, date)
+    file_name = str(date.year) + "-" + str(date.month) + "-" + str(date.day) + "_" + str(date.hour) + "-" + str(date.minute) + "-" + str(date.second) + "-" + str(date.microsecond)
+    extension = ".mp3"
+    mp3 = os.path.join(root, file_name + extension)
     print("ffmpeg -i \""+path+"\" \""+mp3+"\"")
     subprocess.run("ffmpeg -i \""+path+"\" \""+mp3+"\"", shell=True)
-    return mp3
+    return mp3, file_name
 
 class DemoView(APIView):
     def post(self, request, format=None):
@@ -41,10 +42,10 @@ class DemoView(APIView):
         rootpath = os.path.join(Path(__file__).resolve().parent.parent, 'media')
         print(filepath)
         """ MovToMp4(filepath, rootpath) """
-        audio_path = M4aToMp3(filepath, rootpath)
+        audio_path, file_name = M4aToMp3(filepath, rootpath)
         audio = open(audio_path)
         deliverable = FileResponse(audio)
-        return deliverable
+        return Response({"delivelable": deliverable, "file_name": file_name})
 
 #動作確認用
 def index_template(request):
