@@ -44,8 +44,7 @@ class DemoView(APIView):
         """ MovToMp4(filepath, rootpath) """
         audio_path, file_name = M4aToMp3(filepath, rootpath)
         audio = open(audio_path)
-        deliverable = FileResponse(audio, filename=file_name)
-        return deliverable
+        return FileResponse(audio, filename=file_name)
 
 #動作確認用
 def index_template(request):
