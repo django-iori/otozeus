@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.http import FileResponse
 from .models import *
 import os
 import subprocess
@@ -9,6 +10,7 @@ from time import sleep
 from pathlib import Path
 import os
 import datetime
+from django.http import HttpResponse
 
 #.mov -> .mp4
 def MovToMp4(path,root):
@@ -17,6 +19,7 @@ def MovToMp4(path,root):
     mp4 = os.path.join(root, date)
     print("ffmpeg -i \""+path+"\" \""+mp4+"\"")
     subprocess.run("ffmpeg -i \""+path+"\" \""+mp4+"\"", shell=True)
+    return mp4
 
 # -> .mp3
 def M4aToMp3(path,root):
@@ -25,6 +28,7 @@ def M4aToMp3(path,root):
     mp3 = os.path.join(root, date)
     print("ffmpeg -i \""+path+"\" \""+mp3+"\"")
     subprocess.run("ffmpeg -i \""+path+"\" \""+mp3+"\"", shell=True)
+    return mp3
 
 class DemoView(APIView):
     def post(self, request, format=None):
@@ -37,10 +41,14 @@ class DemoView(APIView):
         rootpath = os.path.join(Path(__file__).resolve().parent.parent, 'media')
         print(filepath)
         """ MovToMp4(filepath, rootpath) """
-        M4aToMp3(filepath, rootpath)
-        return Response({ 'success': 'file accepted' })
+        audio_path = M4aToMp3(filepath, rootpath)
+        audio = open(audio_path)
+        deliverable = FileResponse(audio)
+        return deliverable
 
 #動作確認用
 def index_template(request):
     return render(request, 'index.html')
 
+def test(request):
+    return HttpResponse("Hello World")

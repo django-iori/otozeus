@@ -1,2 +1,5 @@
 standardEC2.yml
 .env
+logs/
+media/
+media/uploads/
