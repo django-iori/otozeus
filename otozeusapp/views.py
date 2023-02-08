@@ -40,9 +40,9 @@ class DemoView(APIView):
         sleep(1)
         filepath = os.path.join(Path(__file__).resolve().parent.parent, 'media', 'uploads', filename)
         rootpath = os.path.join(Path(__file__).resolve().parent.parent, 'media')
-        print(filepath)
         """ MovToMp4(filepath, rootpath) """
         audio_path, file_name = M4aToMp3(filepath, rootpath)
+        os.remove(filepath)
         audio = open(audio_path, "rb")
         return FileResponse(audio, filename=file_name)
 
