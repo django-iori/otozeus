@@ -22,14 +22,21 @@ def MovToMp4(path,root):
     return mp4
 
 # -> .mp3
-def M4aToMp3(path,root):
+def M4aToMp3(origin_path,root):
     date = datetime.datetime.now()
     file_name = str(date.year) + "-" + str(date.month) + "-" + str(date.day) + "_" + str(date.hour) + "-" + str(date.minute) + "-" + str(date.second) + "-" + str(date.microsecond)
     extension = ".mp3"
-    mp3 = os.path.join(root, file_name + extension)
-    print("ffmpeg -i \""+path+"\" \""+mp3+"\"")
-    subprocess.run("ffmpeg -i \""+path+"\" \""+mp3+"\"", shell=True)
-    return mp3, file_name
+    mp3_path = os.path.join(root, "mp3", file_name + extension)
+    print("ffmpeg -i \""+origin_path+"\" \""+mp3_path+"\"")
+    subprocess.run("ffmpeg -i \""+origin_path+"\" \""+mp3_path+"\"", shell=True)
+    return mp3_path, file_name
+
+def Mp3ToM4a(mp3_path):
+    m4a_path = mp3_path.replace("mp3", "m4a")
+    print("ffmpeg -i \""+mp3_path+"\" \""+m4a_path+"\"")
+    subprocess.run("ffmpeg -i \""+mp3_path+"\" \""+m4a_path+"\"", shell=True)
+    return m4a_path
+    
 
 class DemoView(APIView):
     def post(self, request, format=None):
@@ -40,18 +47,21 @@ class DemoView(APIView):
         filepath = os.path.join(Path(__file__).resolve().parent.parent, 'media', 'uploads', filename)
         rootpath = os.path.join(Path(__file__).resolve().parent.parent, 'media')
         """ MovToMp4(filepath, rootpath) """
-        audio_path, file_name = M4aToMp3(filepath, rootpath)
+        mp3_path, file_name = M4aToMp3(filepath, rootpath)
         sleep(3)
+        deliverable_path = Mp3ToM4a(mp3_path)
         os.remove(filepath)
-        audio = open(audio_path, "rb")
-        return FileResponse(audio, filename=file_name)
+        deliverable = open(deliverable_path, "rb")
+        return FileResponse(deliverable, filename=file_name)
 
 class DeleteView(APIView):
     def post(self, request, format=None):
         filename = str(request.data['filename'])
-        extension = ".mp3"
-        filepath = os.path.join(Path(__file__).resolve().parent.parent, 'media', filename + extension)
-        os.remove(filepath)
+        extensions = [".mp3", ".m4a"]
+        mp3_path = os.path.join(Path(__file__).resolve().parent.parent, 'media', 'mp3', filename + extensions[0])
+        m4a_path = os.path.join(Path(__file__).resolve().parent.parent, 'media', 'm4a', filename + extensions[1])
+        os.remove(mp3_path)
+        os.remove(m4a_path)
         return Response("delete completed!")
 
 #動作確認用
