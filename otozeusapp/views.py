@@ -22,13 +22,13 @@ def MovToMp4(path,root):
     return mp4
 
 # -> .mp3
-async def M4aToMp3(path,root):
+def M4aToMp3(path,root):
     date = datetime.datetime.now()
     file_name = str(date.year) + "-" + str(date.month) + "-" + str(date.day) + "_" + str(date.hour) + "-" + str(date.minute) + "-" + str(date.second) + "-" + str(date.microsecond)
     extension = ".mp3"
     mp3 = os.path.join(root, file_name + extension)
     print("ffmpeg -i \""+path+"\" \""+mp3+"\"")
-    await subprocess.run("ffmpeg -i \""+path+"\" \""+mp3+"\"", shell=True)
+    subprocess.run("ffmpeg -i \""+path+"\" \""+mp3+"\"", shell=True)
     return mp3, file_name
 
 class DemoView(APIView):
@@ -37,11 +37,11 @@ class DemoView(APIView):
         demo = Demo()
         demo.video = request.data['stream']
         demo.save()
-        sleep(1)
         filepath = os.path.join(Path(__file__).resolve().parent.parent, 'media', 'uploads', filename)
         rootpath = os.path.join(Path(__file__).resolve().parent.parent, 'media')
         """ MovToMp4(filepath, rootpath) """
         audio_path, file_name = M4aToMp3(filepath, rootpath)
+        sleep(3)
         os.remove(filepath)
         audio = open(audio_path, "rb")
         return FileResponse(audio, filename=file_name)
