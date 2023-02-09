@@ -50,6 +50,7 @@ class DemoView(APIView):
         mp3_path, file_name = M4aToMp3(filepath, rootpath)
         sleep(3)
         deliverable_path = Mp3ToM4a(mp3_path)
+        sleep(3)
         os.remove(filepath)
         deliverable = open(deliverable_path, "rb")
         return FileResponse(deliverable, filename=file_name)
