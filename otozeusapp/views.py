@@ -38,15 +38,16 @@ def Mp3ToM4a(mp3_path):
     return m4a_path
     
 
-class DemoView(APIView):
+class UploadFromIOS(APIView):
     def post(self, request, format=None):
-        filename = str(request.data['stream'])
-        demo = Demo()
-        demo.video = request.data['stream']
-        demo.save()
+        filename = str(request.data['audio'])
+        upload = request.data['audio']
         filepath = os.path.join(Path(__file__).resolve().parent.parent, 'media', 'uploads', filename)
         rootpath = os.path.join(Path(__file__).resolve().parent.parent, 'media')
-        """ MovToMp4(filepath, rootpath) """
+        # media/uploads/に保存
+        with open(filepath, 'wb') as f:
+            for chunk in upload.chunks():
+                f.write(chunk)
         mp3_path, file_name = M4aToMp3(filepath, rootpath)
         sleep(3)
         deliverable_path = Mp3ToM4a(mp3_path)
