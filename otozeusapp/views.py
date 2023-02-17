@@ -17,8 +17,8 @@ def MovToMp4(path,root):
     date = datetime.datetime.now()
     date = str(date.year) + "-" + str(date.month) + "-" + str(date.day) + "_" + str(date.hour) + "-" + str(date.minute) + "-" + str(date.second) + "-" + str(date.microsecond) + ".mp4"
     mp4 = os.path.join(root, date)
-    print("ffmpeg -i \""+path+"\" \""+mp4+"\"")
-    subprocess.run("ffmpeg -i \""+path+"\" \""+mp4+"\"", shell=True)
+    print("ffmpeg -nostdin -y -i \""+path+"\" \""+mp4+"\"")
+    subprocess.run("ffmpeg -nostdin -y -i \""+path+"\" \""+mp4+"\"", shell=True)
     return mp4
 
 # -> .mp3
@@ -27,27 +27,27 @@ def M4aToMp3(origin_path,root):
     file_name = str(date.year) + "-" + str(date.month) + "-" + str(date.day) + "_" + str(date.hour) + "-" + str(date.minute) + "-" + str(date.second) + "-" + str(date.microsecond)
     extension = ".mp3"
     mp3_path = os.path.join(root, "mp3", file_name + extension)
-    print("ffmpeg -y -nostdin -i \""+origin_path+"\" \""+mp3_path+"\"")
-    subprocess.run("ffmpeg -y -nostdin -i \""+origin_path+"\" \""+mp3_path+"\"", shell=True)
+    print("ffmpeg -nostdin -y -i \""+origin_path+"\" \""+mp3_path+"\"")
+    subprocess.run("ffmpeg -nostdin -y -i \""+origin_path+"\" \""+mp3_path+"\"", shell=True)
     return mp3_path, file_name
 
 def Mp3ToM4a(mp3_path):
     m4a_path = mp3_path.replace("mp3", "m4a")
-    print("ffmpeg -y -nostdin -i \""+mp3_path+"\" \""+m4a_path+"\"")
-    subprocess.run("ffmpeg -y -nostdin -i \""+mp3_path+"\" \""+m4a_path+"\"", shell=True)
+    print("ffmpeg -nostdin -y -i \""+mp3_path+"\" \""+m4a_path+"\"")
+    subprocess.run("ffmpeg -nostdin -y -i \""+mp3_path+"\" \""+m4a_path+"\"", shell=True)
     return m4a_path
     
 
-class DemoView(APIView):
+class UploadFromIOS(APIView):
     def post(self, request, format=None):
-        filename = str(request.data['stream'])
-        demo = Demo()
-        demo.video = request.data['stream']
-        demo.save()
-        sleep(3)
+        filename = str(request.data['audio'])
+        upload = request.data['audio']
         filepath = os.path.join(Path(__file__).resolve().parent.parent, 'media', 'uploads', filename)
         rootpath = os.path.join(Path(__file__).resolve().parent.parent, 'media')
-        """ MovToMp4(filepath, rootpath) """
+        # media/uploads/に保存
+        with open(filepath, 'wb') as f:
+            for chunk in upload.chunks():
+                f.write(chunk)
         mp3_path, file_name = M4aToMp3(filepath, rootpath)
         sleep(3)
         deliverable_path = Mp3ToM4a(mp3_path)
