@@ -66,7 +66,4 @@ class DeleteView(APIView):
         os.remove(m4a_path)
         return Response("delete completed!")
 
-#動作確認用
-def index_template(request):
-    return render(request, 'index.html')
 
