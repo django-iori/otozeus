@@ -65,5 +65,3 @@ class DeleteView(APIView):
         os.remove(mp3_path)
         os.remove(m4a_path)
         return Response("delete completed!")
-
-
