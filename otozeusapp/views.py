@@ -70,5 +70,3 @@ class DeleteView(APIView):
 def index_template(request):
     return render(request, 'index.html')
 
-def test(request):
-    return HttpResponse("Hello World")
