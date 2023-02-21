@@ -2,4 +2,7 @@ standardEC2.yml
 .env
 logs/
 media/
-media/uploads/
+otozeus/__pycache__/
+otozeusapp/__pycache__/
+otozeusapp/migrations/__pycache__/
+db.sqlite3
